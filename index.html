@@ -1,40 +1,51 @@
-<!DOCTYPE html>
-<head>    
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    
-        <script>
-            L_NO_TOUCH = false;
-            L_DISABLE_3D = false;
-        </script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
-    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
-    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
-    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
-    
-            <meta name="viewport" content="width=device-width,
-                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <style>
-                #main_map {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-            </style>
-        
-</head>
+<!doctype html>
+<html lang="en">
+    <head>
 
-    <body>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+  		integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   		crossorigin=""/>
+
+ 		<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   		integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   		crossorigin=""></script>
+   		<script src="data/leaflet.ajax.min.js"></script>
+   		<script type="text/javascript" src="test.geojson"></script>
+
+   		<!-- slider code -->
+   		<link href="https://refreshless.com/nouislider/distribute/nouislider.css?v=1410" rel="stylesheet">
+    	<script src="https://refreshless.com/nouislider/distribute/nouislider.js?v=1410"></script>
+    	<script src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
+	    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.css"/>
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+	    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+
+        <style>
+		html, body, #mapid {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        .legendslider {
+            width: 90%;
+            padding: 0;
+            margin: 0;
+            position: fixed;
+  			bottom: 0;
+        }
+        </style> 
+
+        <title>Paris</title>
+	</head>
+	<body>
+		
                 <header class = "container">
                     <h1>Flickr GIS Project</h1>
                     <h2>By Nathan Wies and Kazuto Nishimori</h2>
@@ -46,36 +57,154 @@
                     <br>
                    
                 </header>
-                <div class="folium-map" style="width: 80.0%; height: 80.0%; left: 10.0%; top: 10px; bottom: 200px;" id='main_map'></div>
+
+                 <div id="mapid" > </div>
+
                 <footer class = "container">
                     <h3>Contact: nwies@u.rochester.edu</h3>
                 </footer>
-    </body>
-    
-<script>    
-    
-            var main_map = L.map(
-                "main_map",
-                {
-                    center: [43.0, -100.0],
-                    crs: L.CRS.EPSG3857,
-                    zoom: 4,
-                    zoomControl: true,
-                    preferCanvas: false,
-                }
-            );
-
             
+       
 
-        
-    
-            var tile_layer_1 = L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(main_map);
-        
-</script>
-<script>
+	</body>
+		<style>
+		.c-1-color { background: #E5000E; }
+		.c-2-color { background: #E33842; }
+		.c-3-color { background: #E27077; }
+		.c-4-color { background: #E1A8AB; }
+		.c-5-color { background: #E0E0E0; }
+
+		</style>
+<!-- SLIDER CODE STARTS HERE -->
+		<div style="z-index: 10000" class = "legendslider">
+            <div class="slider" id="slider-color" ></div>
+            <input type="text" id="input1">
+            <input type="text" id="input2">
+            <input type="text" id="input3">
+            <input type="text" id="input4">
+            <button id="button1">Update</button>
+        </div>
+            <script>
+				var slider = document.getElementById('slider-color');
+				var input1 = document.getElementById('input1');
+				var input2 = document.getElementById('input2');
+				var input3 = document.getElementById('input3');
+				var input4 = document.getElementById('input4');
+				var inputs = [input1,input2,input3,input4];
+				var class1 = 1000;
+				var class2 = 2000;
+				var class3 = 5000;
+				var class4 = 10000;
+				var classif = [class1,class2,class3,class4];
+
+
+				noUiSlider.create(slider, {
+    				start: [Math.log(class1), Math.log(class2), Math.log(class3), Math.log(class4)],
+    				connect: [true, true, true, true, true],
+    				range: {
+        				'min': [0],
+        				'max': [11.1991184213],
+    				}
+				});
+
+				slider.noUiSlider.on('update', function (values, handle) {
+				    inputs[handle].value = Math.round(Math.exp(values[handle]));
+				    classif[handle] = Math.round(Math.exp(values[handle]));
+				});
+				</script>           
+				<script>
+				var connect = slider.querySelectorAll('.noUi-connect');
+				var classes = ['c-5-color', 'c-4-color', 'c-3-color', 'c-2-color', 'c-1-color'];
+
+				for (var i = 0; i < connect.length; i++) {
+				    connect[i].classList.add(classes[i]);
+				}
+				</script>      
+
+				<script>
+				inputs.forEach(function (input, handle) {
+				    input.addEventListener('change', function () {
+				        slider.noUiSlider.setHandle(handle, Math.log(this.value));
+				        classif[handle] = parseInt(this.value);
+				    });
+
+				});
+				</script>
+
+        <script>
+
+			var mymap = L.map('mapid').setView([48.861989576315885,2.3193358726491717], 13);
+
+
+			L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+			maxZoom: 18,
+			minZoom: 12,
+
+			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			id: 'mapbox/streets-v11'
+			}).addTo(mymap);
+	
+			//var geojson = L.geoJson(hex).addTo(mymap);
+			var geojson = L.geoJson(hex, {
+    			style: style,
+    		}).addTo(mymap);
+/*
+			function getColor(d) {
+    		return 	d >  20000 ? '#E5000E' :
+           			d > 5000 ? '#E33842' :
+           			d > 2000 ? '#E27077' :
+           			d > 1000 ? '#E1A8AB' :
+                 				'#E0E0E0';
+			}; */
+
+			function getColor(d) {
+    		return 	d > classif[3] ? '#E5000E' :
+           			d > classif[2] ? '#E33842' :
+           			d > classif[1] ? '#E27077' :
+           			d > classif[0] ? '#E1A8AB' :
+                 				'#E0E0E0';
+			}; 
+
+
+			function style(feature) {
+    		return {
+        			fillColor: getColor(feature.properties.pic),
+        			weight: 0.05,
+        			opacity: 1,
+        			color: 'white',
+        			dashArray: '3',
+        			fillOpacity: 0.5
+    		};
+    		}
+    		/*
+    		function doStuff() {
+   				console.log(classif);
+   				console.log(classif[3]);
+   				setTimeout(doStuff, 2000);
+			}
+			setTimeout(doStuff, 2000); */
+			
+			button1.addEventListener("click", function(){
+			 
+			  	console.log("button1 was clicked"); 
+			  	geojson.eachLayer(function(layer){
+			  		var pic = layer.feature.properties.pic; 
+					layer.setStyle(style(layer.feature));
+				}); 
+   
+			});
+
+    		//var geojson = L.geoJson(hex, {
+    			//style: style,
+    		//}).addTo(mymap);
+    		
+			
+
+		</script>
+
+		<script>
             var lat, lon; 
             var apiurl, picurl, address;
             var rad = parseFloat(1);
@@ -91,7 +220,7 @@
             var arr = ['<div class = "popup">']
             
             //this function is called when the user clicks the map
-            main_map.on("click", function(e){
+            mymap.on("click", function(e){
                 // in order to force the order in which the methods are run
                 // we use a technique called callbacks, which calls methods 
                 // in an order such that they only run when we want 
@@ -127,7 +256,7 @@
                     var mymarker = L.marker(
                         [e.latlng.lat, e.latlng.lng],
                         {}
-                    ).addTo(main_map);
+                    ).addTo(mymap);
                     var allpics = arr.toString();
                     allpics = allpics.replace(/,/g, "");
                     mymarker.bindPopup(allpics);
@@ -138,7 +267,7 @@
             })
 </script>
 
-
+	
 <style>
     .popup {
     
@@ -165,5 +294,13 @@
     
     width: 250px;
     }
+
+    #mapBox
+    {
+     flex:5;
+     position:relative;
+     border:1px solid red; 
+    }
 </style>
-    
+
+</html>
