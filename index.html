@@ -44,7 +44,7 @@
 
         <title>Paris</title>
 	</head>
-	<body class = "container">
+	<body>
 		
                 <header>
                     <h1>Flickr GIS Project</h1>
@@ -210,6 +210,18 @@
             var rad = parseFloat(1);
             var num = parseFloat(10);
             var count = 0;
+            
+            var Icon1 = L.icon({
+			    iconUrl: 'target.png',
+			    iconSize:     [30, 30], // size of the icon
+			    iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+			    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+			});
+
+            var mymarker = L.marker(
+                        [0, 0],
+                        {icon: Icon1}
+                ).addTo(mymap);
 
             function myFunction() {
               var x = document.getElementById("frm1");
@@ -253,15 +265,14 @@
                 // makes the marker with all of the info passed in the getJson function
                 function makeMarker(){
                     arr.push("<div>")
-                    var mymarker = L.marker(
-                        [e.latlng.lat, e.latlng.lng],
-                        {}
-                    ).addTo(mymap);
+               		var newLatLng = new L.LatLng(e.latlng.lat, e.latlng.lng);
+    				mymarker.setLatLng(newLatLng); 
                     var allpics = arr.toString();
                     allpics = allpics.replace(/,/g, "");
-                    mymarker.bindPopup(allpics);
+                    mymarker.bindPopup(allpics).openPopup().setOpacity(0);
                     picurl = ""
                     arr = ['<div class = "popup">']
+               
                 }
                 getAddress(doJson);
             })
