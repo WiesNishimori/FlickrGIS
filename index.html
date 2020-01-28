@@ -27,63 +27,139 @@
 	    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
 
         <style>
+		.popup {
+    
+	       height: 300px;
+	       width: 300px;
+	       overflow: auto;
+	    }
+	    
+	    img {
+	    
+	      width: 250px;
+	      height: 250px;
+	      object-fit: cover;
+	    }
+	    
+	    .container{
+
+	        max-width: 960px;
+	        width: 90%;
+	        left: 5%;
+	        margin: auto;
+	    }
+	    p {
+	    
+	    width: 250px;
+	    }
+
+	    #mapBox
+	    {
+	     flex:5;
+	     position:relative;
+	     border:1px solid red; 
+	    }
+
+		#logoContainer {
+		  position: absolute;
+		  z-index: 100;
+		  top: 0;
+		  left: 50px;
+		  border-radius: 3px 3px 0 0;
+		  box-shadow: 0 2px 5px 1px rgba(0,0,0,0.2);
+		  background-color: white;
+		  width: 200px;
+		  height: 260px;
+		}
+
+		h1, form, button {
+		  font-family: 'roboto', sans-serif;
+		  transition: all 0.3s ease-in-out;
+		}
+
+		.newcon {
+			padding-left: 20px;
+		    width: 80%;
+		}
+
+		h1 {
+		  
+		  font-size: 24px;
+		  background: darken($color, 4%);
+		  color: black;
+		}
+
+		h2 {
+
+		  font-size: 14px;
+		  background: darken($color, 4%);
+		  color: black;
+		}
+
+		.cool {
+
+		  box-shadow: 0px 0px 0px 1px;
+		 }
+	
 		#mapid {
             padding: 0;
             margin: 0;
             height: 600px;
         }
         .legendslider {
-            width: 90%;
+            width: 70%;
             padding: 0;
             margin: 0;
-            left: 5%;
+            left: 20%;
             position: fixed;
-  			bottom: 0;
+  			bottom: 20px;
+  			background-color: white;
+  			border-radius: 3px 3px 0 0;
+	  		box-shadow: 0 2px 5px 1px rgba(0,0,0,0.2);
+	  		width: 800px;
+	  		height: 50px;
         }
+
+        .c-1-color { background: #E5000E; }
+		.c-2-color { background: #E33842; }
+		.c-3-color { background: #E27077; }
+		.c-4-color { background: #E1A8AB; }
+		.c-5-color { background: #E0E0E0; }
+
         </style> 
 
         <title>Paris</title>
 	</head>
 	<body>
 		
-                <header>
-                    <h1>Flickr GIS Project</h1>
+
+                <div id="mapid" > </div>
+                <div id="logoContainer">
+                	<div class = "newcon">
+					<h1>Flickr GIS Project</h1>
                     <h2>By Nathan Wies and Kazuto Nishimori</h2>
-                    <form id="frm1">
-                      Radius: <input type="text" name="rad" id="radius" value="1">
-                      Number of Pictures: <input type="text" name="pics" id="picture" value="10">
+                    <form id = "frm1">
+                      Radius: <input class = "cool" type="text" name="rad" id="radius" value="1">
+                      Number of Pictures: <input class = "cool" type="text" name="pics" id="picture" value="10"><br>
                       <button type="button" onclick="myFunction();">Change</button>
                     </form>
-                    <br>
-                   
-                </header>
+                	</div>
+                	<div  class = "legendslider">
+			            <div class="slider" id="slider-color" ></div>
+			            <input type="text" id="input1">
+			            <input type="text" id="input2">
+			            <input type="text" id="input3">
+			            <input type="text" id="input4">
+			            <button id="button1">Update</button>
+			        </div>
+				</div>
 
-                 <div id="mapid" > </div>
-
-                <footer>
-                    <h3>Contact: nwies@u.rochester.edu</h3>
-                </footer>
+          	
             
        
 
 	</body>
-		<style>
-		.c-1-color { background: #E5000E; }
-		.c-2-color { background: #E33842; }
-		.c-3-color { background: #E27077; }
-		.c-4-color { background: #E1A8AB; }
-		.c-5-color { background: #E0E0E0; }
-
-		</style>
-<!-- SLIDER CODE STARTS HERE -->
-		<div style="z-index: 10000" class = "legendslider">
-            <div class="slider" id="slider-color" ></div>
-            <input type="text" id="input1">
-            <input type="text" id="input2">
-            <input type="text" id="input3">
-            <input type="text" id="input4">
-            <button id="button1">Update</button>
-        </div>
+		
             <script>
 				var slider = document.getElementById('slider-color');
 				var input1 = document.getElementById('input1');
@@ -200,7 +276,14 @@
     			//style: style,
     		//}).addTo(mymap);
     		
-			
+			var mapControlsContainer = document.getElementsByClassName("leaflet-control")[0];
+			var logoContainer = document.getElementById("logoContainer");
+
+			mapControlsContainer.appendChild(logoContainer);
+
+			var div = L.DomUtil.get('logoContainer'); // this must be an ID, not class!
+			L.DomEvent.on(div, 'mousewheel', L.DomEvent.stopPropagation);
+			L.DomEvent.on(div, 'click', L.DomEvent.stopPropagation);
 
 		</script>
 
@@ -209,7 +292,6 @@
             var apiurl, picurl, address;
             var rad = parseFloat(1);
             var num = parseFloat(10);
-            var count = 0;
             
             var Icon1 = L.icon({
 			    iconUrl: 'target.png',
@@ -253,7 +335,6 @@
                     $.each(json.photos.photo,function(i,result){
                     picurl = "https://farm"+result.farm +".staticflickr.com/"+result.server +"/"+result.id+"_"+ result.secret+".jpg";
                     arr.push('<img src="'+picurl+'"/><br>'+result.title+'<br><br>');
-                    count = count+1;
                     })
                     }
                     else{
@@ -280,38 +361,10 @@
 
 	
 <style>
-    .popup {
     
-       height: 300px;
-       width: 300px;
-       overflow: auto;
-    }
-    
-    img {
-    
-      width: 250px;
-      height: 250px;
-      object-fit: cover;
-    }
-    
-    .container{
 
-        max-width: 960px;
-        width: 90%;
-        left: 5%;
-        margin: auto;
-    }
-    p {
-    
-    width: 250px;
-    }
 
-    #mapBox
-    {
-     flex:5;
-     position:relative;
-     border:1px solid red; 
-    }
+
 </style>
 
 </html>
