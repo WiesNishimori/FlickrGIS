@@ -210,7 +210,9 @@
 
 				inputs.forEach(function (input, handle) {
 				    input.addEventListener('change', function () {
+				    	var valuebefore = this.value;
 				        slider.noUiSlider.setHandle(handle, Math.log(this.value));
+				        this.value = valuebefore;
 				        classif[handle] = parseInt(this.value);
 				    });
 
